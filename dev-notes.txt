@@ -1,0 +1,6 @@
+3. Beginner Step
+    a. Crypto> npm install --global yarn
+    b. npx create-react-app cryto-dash
+       1. this automatically installed create-react-ap and created the project in a new folder called cryto-dash in the current directory
+    c. crypto-dash> yarn start
+        1. this started the react app on localhost:3000
