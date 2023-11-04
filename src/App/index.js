@@ -4,6 +4,7 @@ import AppLayout from './AppLayout';
 import AppBar from './AppBar';
 import { AppProvider } from './AppProvider'; // wrapping in brackets means we are pulling name from object export
 import Settings from '../Settings';
+import Content from '../Shared/Content';
 
 
 class App extends Component {
@@ -11,8 +12,10 @@ class App extends Component {
     return (
       <AppLayout>
         <AppProvider>
-          <AppBar></AppBar>
-          <Settings />
+          <AppBar />
+          <Content>
+            <Settings />
+          </Content>
         </AppProvider>
       </AppLayout>
     );

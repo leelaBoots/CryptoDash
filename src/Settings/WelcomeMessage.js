@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppContext } from '../App/AppProvider';
 
-export default function ({firstVisit}) {
+export default function _WelcomeMessage({firstVisit}) {
     return (
         <AppContext.Consumer>
             {({firstVisit}) =>
