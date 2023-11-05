@@ -25,12 +25,14 @@ export class AppProvider extends React.Component {
       addCoin: this.addCoin,
       removeCoin: this.removeCoin,
       isInFavorites: this.isInFavorites,
-      confirmFavorites: this.confirmFavorites
+      confirmFavorites: this.confirmFavorites,
+      setFilteredCoins: this.setFilteredCoins
     }
   }
 
   componentDidMount = () => {
     this.fetchCoins();
+    this.fetchPrices();
   }
 
   // async function to make the API call to CryptoCompare
@@ -39,6 +41,32 @@ export class AppProvider extends React.Component {
     this.setState({coinList});
     //console.log(coinList);
   }
+
+  fetchPrices = async() => {
+    // if its first visit, dont get the prices of the default coins
+    if (this.state.firstVisit) return;
+
+    let prices = await this.pricesCall();
+    // we must filter the empty price objects
+    prices = prices.filter(price => Object.keys(price).length);
+    this.setState({prices});
+  }
+
+  // this will build an array of promises, that eventually all get resolved asynclly
+  pricesCall = async() => {
+    let returnData = [];
+    for (let i = 0; i < this.state.favorites.length; i++) {
+      try {
+        // since we are in an async function, we must await this function to return
+        let priceData =  await cc.priceFull(this.state.favorites[i], 'USD');
+        returnData.push(priceData);
+      } catch (e) {
+        console.warn('Fetch price error: ', e);
+      }
+    }
+    return returnData;
+  }
+
 
   // addCoin is a function that takes a key to the coin we want to add to our favorites
   addCoin = key  => {
@@ -62,13 +90,16 @@ export class AppProvider extends React.Component {
     this.setState({
       firstVisit: false,
       page: 'dashboard'
+    }, () => {
+      // add this function callback to get prices after we save the initial state
+      this.fetchPrices();
     });
     localStorage.setItem('cryptoDash', JSON.stringify({
       favorites: this.state.favorites
     }));
   }
 
-  savedSettings(){
+  savedSettings() {
     let cryptoDashData = JSON.parse(localStorage.getItem('cryptoDash'));
     if (!cryptoDashData) {
       // this means its the first visit, we want to go to the settings page
@@ -79,7 +110,9 @@ export class AppProvider extends React.Component {
     return {favorites}; // this will override our default favorites
   }
 
-  setPage = page => this.setState({page})
+  setPage = page => this.setState({page});
+
+  setFilteredCoins = (filteredCoins) => this.setState({filteredCoins});
 
   render() {
     return (
