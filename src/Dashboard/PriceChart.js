@@ -20,7 +20,7 @@ export default function _PriceChart() {
       {({historical, changeChartSelect}) =>
         <Tile>
           <ChartSelect
-            defaultValue={"months"}
+            defaultValue={"days"}
             onChange={e => changeChartSelect(e.target.value)}  
           >
             <option value="days">Days</option>

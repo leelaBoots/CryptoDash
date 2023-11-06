@@ -7,8 +7,9 @@ import Search from './Search';
 
 
 export default function _Settings() {
-  return <Page name="settings">
+  return <Page name="search coins">
     <WelcomeMessage/>
+    <div>current favorites:</div>
     <CoinGrid topSection/>
     <ConfirmButton/>
     <Search />

@@ -10,25 +10,26 @@ const  ConfirmButtonStyled = styled.div`
   ${fontSize1};
   padding: 5px;
   cursor: pointer;
+  border: .5px solid ${color3};
   &:hover {
     ${greenBoxShadow}
   }
 `;
 
-export const CenterDiv = styled.div`
+export const LeftDiv = styled.div`
   display: grid;
-  justify-content: center;
+  justify-content: left;
 `;
 
 export default function _ConfirmButton() {
   return (
     <AppContext.Consumer> 
       {({confirmFavorites}) => 
-        <CenterDiv>
+        <LeftDiv>
           <ConfirmButtonStyled onClick={confirmFavorites}>
             Confirm Favorites
           </ConfirmButtonStyled>
-        </CenterDiv>
+        </LeftDiv>
       }
     </AppContext.Consumer>
   )

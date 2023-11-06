@@ -8,6 +8,7 @@ import fuzzy from 'fuzzy';  // library used to conduct our fuzzy search on coin 
 const SearchGrid = styled.div`
   display: grid;
   grid-template-columns: 200px 1fr;
+  margin-left: 20px;
 `
 const SearchInput = styled.input`
   ${backgroundColor2};

@@ -10,7 +10,7 @@ cc.setApiKey(CC_API_KEY);
 
 export const AppContext = React.createContext();
 
-const MAX_FAVORITES = 10;
+const MAX_FAVORITES = 15;
 const TIME_PLOTS = 10;
 
 // this is the main component of the application
@@ -19,8 +19,8 @@ export class AppProvider extends React.Component {
     super(props);
     this.state = {
       page: 'dashboard', // what page are we on
-      favorites: ['BTC', 'ETH', 'FLAP', 'DOGE'], // save keys of our favorite coins
-      timeInterval: 'months',
+      favorites: ['DOGE', 'BTC', 'ETH', 'TRX', 'SOL', 'LTC', 'ADA', 'DOT'], // save keys of our favorite coins
+      timeInterval: 'days',
       ...this.savedSettings(),
       setPage: this.setPage,
       addCoin: this.addCoin,
@@ -161,7 +161,7 @@ export class AppProvider extends React.Component {
     let cryptoDashData = JSON.parse(localStorage.getItem('cryptoDash'));
     if (!cryptoDashData) {
       // this means its the first visit, we want to go to the settings page
-      return {page: 'settings', firstVisit: true }
+      return {page: 'search coins', firstVisit: true }
     }
     // otherwise, we want to pull the favorites off of the existing data
     let {favorites, currentFavorite} = cryptoDashData;

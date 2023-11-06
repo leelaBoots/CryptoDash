@@ -9,7 +9,7 @@ export const CoinGridStyled = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   grid-gap: 15px;
-  margin-top: 40px;
+  margin: 10px 0 20px 0;
 `;
 
 // if we have a coinFilter, then return the filteredCoins(slice these results too to optimize the search speed), otherwise the first 100
