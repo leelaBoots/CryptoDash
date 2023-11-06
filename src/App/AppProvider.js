@@ -1,17 +1,17 @@
 import React from 'react';
 import _ from 'lodash'; // we use this library for some easy array manipulation
+import moment from 'moment';
 
 const cc = require('cryptocompare');
 
 // this is the optional apikey for CryptoCompare api, stored in my .env file, not part of git project
-const CC_API_KEY = process.env.CRYPTOCOMPARE_API_KEY
-
+const CC_API_KEY = process.env.REACT_APP_API_KEY;
 cc.setApiKey(CC_API_KEY);
 
 export const AppContext = React.createContext();
 
 const MAX_FAVORITES = 10;
-
+const TIME_PLOTS = 10;
 
 // this is the main component of the application
 export class AppProvider extends React.Component {
@@ -34,6 +34,7 @@ export class AppProvider extends React.Component {
   componentDidMount = () => {
     this.fetchCoins();
     this.fetchPrices();
+    this.fetchHistorical();
   }
 
   // async function to make the API call to CryptoCompare
@@ -53,6 +54,22 @@ export class AppProvider extends React.Component {
     this.setState({prices});
   }
 
+  fetchHistorical = async() => {
+    if (this.state.firstVisit) return;
+    let results = await this.historical();
+    let historical = [
+      {
+        name: this.state.currentFavorite,
+        data: results.map((ticker, index) => [
+          moment().subtract({months: TIME_PLOTS - index}).valueOf(),
+          ticker.USD
+        ])
+      }
+    ]
+    this.setState({historical});
+  }
+
+
   // this will build an array of promises, that eventually all get resolved asynclly
   pricesCall = async() => {
     let returnData = [];
@@ -66,6 +83,25 @@ export class AppProvider extends React.Component {
       }
     }
     return returnData;
+  }
+
+  historical = () => {
+    let promises = [];
+    // we start 10 months from now, then 9 and so on, to create a series that we can chart
+    for (let units = TIME_PLOTS; units > 0; units--) {
+      promises.push(
+        // CryptoCompare API call
+        cc.priceHistorical(
+          this.state.currentFavorite,
+          ['USD'],
+          moment()
+          .subtract({months: units})
+          .toDate()
+        )
+      )
+    }
+    // this returns after all promises have been resolved
+    return Promise.all(promises);
   }
 
 
@@ -93,9 +129,12 @@ export class AppProvider extends React.Component {
       firstVisit: false,
       page: 'dashboard',
       currentFavorite,
+      prices: null,
+      historical: null
     }, () => {
       // add this function callback to get prices after we save the initial state
       this.fetchPrices();
+      this.fetchHistorical();
     });
     localStorage.setItem('cryptoDash', JSON.stringify({
       favorites: this.state.favorites,
@@ -105,8 +144,10 @@ export class AppProvider extends React.Component {
 
   setCurrentFavorite = (sym) => {
     this.setState({
-      currentFavorite: sym
-    });
+      currentFavorite: sym,
+      historical: null
+    }, this.fetchHistorical);
+
     // parse out the local storage, get the current value of local storage using ...(spread) and merge with updated currentfavorite
     localStorage.setItem('cryptoDash', JSON.stringify({
       ...JSON.parse(localStorage.getItem('cryptoDash')),

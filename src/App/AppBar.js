@@ -21,6 +21,9 @@ const ControlButtonElem = styled.div`
       -1px 1px 5px #03ff03,
       1px 1px 5px #03ff03;
   `}
+  ${props => props.hidden && css`
+    display: none;
+  `}
 `;
 
 function toProperCase(lower) {
