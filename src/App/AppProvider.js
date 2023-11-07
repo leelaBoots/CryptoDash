@@ -6,6 +6,7 @@ const cc = require('cryptocompare');
 
 // this is the optional apikey for CryptoCompare api, stored in my .env file, not part of git project
 const CC_API_KEY = process.env.REACT_APP_API_KEY;
+console.log(CC_API_KEY);
 cc.setApiKey(CC_API_KEY);
 
 export const AppContext = React.createContext();
